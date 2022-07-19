@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, genSalt, hash } from 'bcrypt';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
+import { CheckDuplicateResultDto } from './dto/check-duplicate-result.dto';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersEntity } from './users.entity';
@@ -33,9 +35,9 @@ export class UsersService {
     return this.usersRepository.findOneBy([{ email }, { login }]);
   }
 
-  public async hasDuplicateBy(
+  public async checkDuplicateCredentials(
     properties: Partial<Pick<UsersEntity, 'vk_id' | 'email' | 'login'>>,
-  ) {
+  ): Promise<CheckDuplicateResultDto> {
     const where = Object.keys(properties).map((key) => ({
       [key]: properties[key],
     }));
@@ -44,28 +46,28 @@ export class UsersService {
       user?.email == properties.email &&
       typeof properties.email != 'undefined'
     ) {
-      return {
-        duplicateKey: 'email',
+      return plainToInstance(CheckDuplicateResultDto, {
+        duplicate_key: 'email',
         message: 'Пользователь с такой почтой уже существует',
-      };
+      });
     }
     if (
       user?.vk_id == properties.vk_id &&
       typeof properties.vk_id != 'undefined'
     ) {
-      return {
-        duplicateKey: 'vk_id',
+      return plainToInstance(CheckDuplicateResultDto, {
+        duplicate_key: 'vk_id',
         message: 'Этот профиль уже привязан к другому аккаунту',
-      };
+      });
     }
     if (
       user?.login == properties.login &&
       typeof properties.login != 'undefined'
     ) {
-      return {
-        duplicateKey: 'login',
+      return plainToInstance(CheckDuplicateResultDto, {
+        duplicate_key: 'login',
         message: 'Пользователь с таким логином уже существует',
-      };
+      });
     }
     return null;
   }

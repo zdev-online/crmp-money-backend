@@ -1,8 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, IsEmail, IsAlpha, MinLength, MaxLength, ValidateIf } from "class-validator";
 
 export class SignInWithEmailOrLogin {
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: String,
     title: 'Почта пользователя',
   })
@@ -12,7 +12,7 @@ export class SignInWithEmailOrLogin {
   @IsEmail()
   public email: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     title: 'Логин пользователя',
     minLength: 4,
     maxLength: 15,

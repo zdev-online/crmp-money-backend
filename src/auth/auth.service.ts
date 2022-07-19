@@ -30,7 +30,7 @@ export class AuthService {
   public async signupWithEmail(dto: SignUpWithEmailDto): Promise<AuthResponseDto> {
     await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
 
-    const duplicate = await this.userService.hasDuplicateBy({
+    const duplicate = await this.userService.checkDuplicateCredentials({
       email: dto.email,
       login: dto.login,
     });
@@ -64,7 +64,7 @@ export class AuthService {
       throw new BadRequestException({ message: "Неверные параметры авторизации" });
     }
 
-    const dublicate = await this.userService.hasDuplicateBy({
+    const dublicate = await this.userService.checkDuplicateCredentials({
       vk_id: dto.mid,
       login: dto.login,
     });
@@ -174,6 +174,8 @@ export class AuthService {
 
     const uuid = uuidv4();
     const [access_token, refresh_token] = await this.generateTokens({ user_id: user.user_id, uuid }, { user_id: user.user_id });
+
+    await this.tokenService.saveRefreshToken(refresh_token, uuid);
 
     return new AuthResponseDto({ access_token, refresh_token, user });
   }
