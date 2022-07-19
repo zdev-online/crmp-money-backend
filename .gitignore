@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+.DS_Store
+
+npm-debug.log*
+
+# Dependency directory
+node_modules
+
+# Optional npm cache directory
+.npm
+
+#IDEs
+.idea
+.vscode
+
+.development.env
+.production.env
+
+# code testing coverage
+coverage
+
+
+dist
+
+docs
+
+docs.zip
+
+*.txt
