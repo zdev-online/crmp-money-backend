@@ -17,6 +17,8 @@ import { GoogleService } from 'src/google/google.service';
 import { RefreshTokenPayloadDto } from 'src/tokens/dto/refresh-token-payload.dto';
 import { SignInWithVkDto } from './dto/signin-with-vk.dto';
 import { SignInWithEmailOrLogin } from './dto/signin-with-email-or-login.dto';
+import { ResetStartDto } from './dto/reset.dto';
+import { ResetConfirmDto } from './dto/reset-confirm-dto';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,7 @@ export class AuthService {
     private tokenService: TokensService,
     private userService: UsersService,
     private googleService: GoogleService,
-  ) {}
+  ) { }
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
@@ -54,7 +56,7 @@ export class AuthService {
         user_id: new_user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid);
+    await this.tokenService.saveRefreshToken(refresh_token, uuid, new_user.user_id);
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
@@ -92,7 +94,7 @@ export class AuthService {
         user_id: new_user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid);
+    await this.tokenService.saveRefreshToken(refresh_token, uuid, new_user.user_id);
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
@@ -128,7 +130,7 @@ export class AuthService {
         user_id: user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid);
+    await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
 
     return new AuthResponseDto({ access_token, refresh_token, user });
   }
@@ -156,7 +158,7 @@ export class AuthService {
         user_id: user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid);
+    await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
 
     return new AuthResponseDto({ access_token, refresh_token, user });
   }
@@ -204,9 +206,35 @@ export class AuthService {
       { user_id: user.user_id },
     );
 
-    await this.tokenService.saveRefreshToken(refresh_token, uuid);
+    await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
 
     return new AuthResponseDto({ access_token, refresh_token, user });
+  }
+
+  public async restoreStart(dto: ResetStartDto): Promise<ResetStartDto> {
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) {
+      throw new NotFoundException({ message: 'Пользователь не найден' });
+    }
+
+    const reset_token = await this.tokenService.generateResetToken(user.user_id);
+
+    return dto;
+  }
+
+  public async restoreConfirm(dto: ResetConfirmDto) {
+    const decoded_reset_token = await this.tokenService.verifyAccessToken<{ user_id: number }>(dto.reset_token);
+
+    if (!decoded_reset_token) {
+      throw new BadRequestException({ message: "Аккаунт не запрашивал восстановление" });
+    }
+
+    await Promise.all([
+      this.userService.changePassword(decoded_reset_token.user_id, dto.new_password),
+      this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id)
+    ]);
+
+    return;
   }
 
   public generateTokens(

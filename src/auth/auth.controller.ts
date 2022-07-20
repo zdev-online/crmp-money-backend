@@ -18,6 +18,8 @@ import { Cookies } from 'src/cookies.decorator';
 import { TokensService } from 'src/tokens/tokens.service';
 import { AuthService } from './auth.service';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { ResetConfirmDto } from './dto/reset-confirm-dto';
+import { ResetStartDto } from './dto/reset.dto';
 import { SignInWithEmailOrLogin } from './dto/signin-with-email-or-login.dto';
 import { SignInWithVkDto } from './dto/signin-with-vk.dto';
 import { SignUpWithEmailDto } from './dto/signup-with-email.dto';
@@ -28,7 +30,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenService: TokensService,
-  ) {}
+  ) { }
 
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Регистрация через E-Mail' })
@@ -43,7 +45,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const auth_response = await this.authService.signupWithEmail(dto);
 
-    this.setRefreshToken(auth_response.refresh_token, res);
+    this.setRefreshTokenCookie(auth_response.refresh_token, res);
 
     return auth_response;
   }
@@ -61,7 +63,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const auth_response = await this.authService.signupWithVK(dto);
 
-    this.setRefreshToken(auth_response.refresh_token, res);
+    this.setRefreshTokenCookie(auth_response.refresh_token, res);
 
     return auth_response;
   }
@@ -80,7 +82,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const auth_response = await this.authService.signinWithEmailOrLogin(dto);
 
-    this.setRefreshToken(auth_response.refresh_token, res);
+    this.setRefreshTokenCookie(auth_response.refresh_token, res);
 
     return auth_response;
   }
@@ -99,7 +101,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const auth_response = await this.authService.signinWithVK(dto);
 
-    this.setRefreshToken(auth_response.refresh_token, res);
+    this.setRefreshTokenCookie(auth_response.refresh_token, res);
 
     return auth_response;
   }
@@ -122,7 +124,7 @@ export class AuthController {
   ): Promise<AuthResponseDto> {
     const refresh_data = await this.authService.refresh(current_refresh_token);
 
-    this.setRefreshToken(refresh_data.refresh_token, res);
+    this.setRefreshTokenCookie(refresh_data.refresh_token, res);
 
     return refresh_data;
   }
@@ -149,7 +151,30 @@ export class AuthController {
     return this.authService.logout(refresh_token);
   }
 
-  private setRefreshToken(refresh_token: string, res: e.Response): void {
+  @ApiTags('Authorization')
+  @ApiOperation({ description: 'Начать восстановление доступа' })
+  @ApiOkResponse({
+    description: 'Ответ при успешном начале восстановления',
+    type: ResetStartDto
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/restore/start')
+  public async restoreStart(@Body() dto: ResetStartDto): Promise<ResetStartDto> {
+    return this.authService.restoreStart(dto);
+  }
+
+  @ApiTags('Authorization')
+  @ApiOperation({ description: 'Завершение восстановления доступа' })
+  @ApiOkResponse({
+    description: 'Ответ при успешной смене пароля',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/restore/confirm')
+  public async restoreConfrim(@Body() dto: ResetConfirmDto): Promise<void> {
+    return this.authService.restoreConfirm(dto);
+  }
+
+  private setRefreshTokenCookie(refresh_token: string, res: e.Response): void {
     res.cookie('x-refresh-token', refresh_token, {
       httpOnly: true,
       maxAge: this.tokenService.getRefreshTokensExpireTime(),

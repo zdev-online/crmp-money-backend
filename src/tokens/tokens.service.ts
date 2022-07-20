@@ -16,7 +16,7 @@ export class TokensService {
     private configService: ConfigService,
     @InjectRepository(TokensEntity)
     private tokenRepository: Repository<TokensEntity>,
-  ) {}
+  ) { }
 
   public async generateAccessToken(payload: {
     [key: string]: any;
@@ -85,11 +85,13 @@ export class TokensService {
   public async saveRefreshToken(
     value: string,
     uuid: string,
+    user_id: number
   ): Promise<TokensEntity> {
     return this.tokenRepository.save({
       value,
       uuid,
       expires_at: this.getRefreshTokensExpireTime() + Date.now(),
+      user_id
     });
   }
 
@@ -99,6 +101,9 @@ export class TokensService {
 
   public async deleteTokenByUuid(uuid: string) {
     return this.tokenRepository.delete({ uuid });
+  }
+
+  public async deleteTokensByUserId(user_id: number) {
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: 'delete-expired-tokens' })
@@ -114,5 +119,9 @@ export class TokensService {
     } catch (error) {
       return this.logger.error(`Не удалось удалить токены: ${error}`);
     }
+  }
+
+  public generateResetToken(user_id: number) {
+    return this.generateAccessToken({ user_id });
   }
 }

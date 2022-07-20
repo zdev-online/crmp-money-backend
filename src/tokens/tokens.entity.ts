@@ -9,6 +9,9 @@ export class TokensEntity {
   @Column({ type: 'varchar' })
   public uuid: string;
 
+  @Column({ type: 'bigint' })
+  public user_id: number;
+
   @Column({ type: 'text' })
   public value: string;
 
