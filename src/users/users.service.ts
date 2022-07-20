@@ -15,7 +15,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     public usersRepository: Repository<UsersEntity>,
-  ) { }
+  ) {}
 
   public async create(dto: CreateUserDto): Promise<UsersEntity> {
     return this.usersRepository.save(dto);
@@ -104,11 +104,17 @@ export class UsersService {
     return new ProfileResponseDto(profile);
   }
 
-  public async changePassword(user_id: number, password: string): Promise<void> {
+  public async changePassword(
+    user_id: number,
+    password: string,
+  ): Promise<void> {
     await this.update(user_id, { password });
   }
 
-  private async update(user_id: number, update: QueryDeepPartialEntity<UsersEntity>) {
+  private async update(
+    user_id: number,
+    update: QueryDeepPartialEntity<UsersEntity>,
+  ) {
     return this.usersRepository.update({ user_id }, update);
   }
 }

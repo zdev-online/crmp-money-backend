@@ -1,11 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Expose, Exclude, Transform } from "class-transformer";
-import { UsersEntity } from "../users.entity";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Expose, Exclude, Transform } from 'class-transformer';
+import { UsersEntity } from '../users.entity';
 
 export class ProfileResponseDto implements UsersEntity {
-
   @ApiProperty({
-    title: "ID пользователя"
+    title: 'ID пользователя',
   })
   @Expose()
   public user_id: number;
@@ -54,7 +53,6 @@ export class ProfileResponseDto implements UsersEntity {
   })
   @Expose()
   public updated_at: Date;
-
 
   constructor(profile: ProfileResponseDto) {
     Object.assign(this, profile);

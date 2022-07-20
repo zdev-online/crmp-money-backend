@@ -10,7 +10,7 @@ import { UsersService } from './users.service';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) { }
+  constructor(private userService: UsersService) {}
 
   @ApiOkResponse({
     type: UserResponseDto,

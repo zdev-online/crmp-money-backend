@@ -4,7 +4,7 @@ import { UsersEntity } from '../users.entity';
 
 export class UserResponseDto implements UsersEntity {
   @ApiProperty({
-    title: "ID пользователя"
+    title: 'ID пользователя',
   })
   @Expose()
   public user_id: number;

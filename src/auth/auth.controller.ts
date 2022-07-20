@@ -30,7 +30,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenService: TokensService,
-  ) { }
+  ) {}
 
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Регистрация через E-Mail' })
@@ -155,11 +155,13 @@ export class AuthController {
   @ApiOperation({ description: 'Начать восстановление доступа' })
   @ApiOkResponse({
     description: 'Ответ при успешном начале восстановления',
-    type: ResetStartDto
+    type: ResetStartDto,
   })
   @HttpCode(HttpStatus.OK)
   @Post('/restore/start')
-  public async restoreStart(@Body() dto: ResetStartDto): Promise<ResetStartDto> {
+  public async restoreStart(
+    @Body() dto: ResetStartDto,
+  ): Promise<ResetStartDto> {
     return this.authService.restoreStart(dto);
   }
 

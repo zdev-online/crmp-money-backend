@@ -16,7 +16,7 @@ export class TokensService {
     private configService: ConfigService,
     @InjectRepository(TokensEntity)
     private tokenRepository: Repository<TokensEntity>,
-  ) { }
+  ) {}
 
   public async generateAccessToken(payload: {
     [key: string]: any;
@@ -85,13 +85,13 @@ export class TokensService {
   public async saveRefreshToken(
     value: string,
     uuid: string,
-    user_id: number
+    user_id: number,
   ): Promise<TokensEntity> {
     return this.tokenRepository.save({
       value,
       uuid,
       expires_at: this.getRefreshTokensExpireTime() + Date.now(),
-      user_id
+      user_id,
     });
   }
 
@@ -104,6 +104,7 @@ export class TokensService {
   }
 
   public async deleteTokensByUserId(user_id: number) {
+    return this.tokenRepository.delete({ user_id });
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: 'delete-expired-tokens' })

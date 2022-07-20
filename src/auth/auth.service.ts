@@ -27,7 +27,7 @@ export class AuthService {
     private tokenService: TokensService,
     private userService: UsersService,
     private googleService: GoogleService,
-  ) { }
+  ) {}
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
@@ -56,7 +56,11 @@ export class AuthService {
         user_id: new_user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid, new_user.user_id);
+    await this.tokenService.saveRefreshToken(
+      refresh_token,
+      uuid,
+      new_user.user_id,
+    );
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
@@ -94,7 +98,11 @@ export class AuthService {
         user_id: new_user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(refresh_token, uuid, new_user.user_id);
+    await this.tokenService.saveRefreshToken(
+      refresh_token,
+      uuid,
+      new_user.user_id,
+    );
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
@@ -217,21 +225,30 @@ export class AuthService {
       throw new NotFoundException({ message: 'Пользователь не найден' });
     }
 
-    const reset_token = await this.tokenService.generateResetToken(user.user_id);
+    const reset_token = await this.tokenService.generateResetToken(
+      user.user_id,
+    );
 
     return dto;
   }
 
   public async restoreConfirm(dto: ResetConfirmDto) {
-    const decoded_reset_token = await this.tokenService.verifyAccessToken<{ user_id: number }>(dto.reset_token);
+    const decoded_reset_token = await this.tokenService.verifyAccessToken<{
+      user_id: number;
+    }>(dto.reset_token);
 
     if (!decoded_reset_token) {
-      throw new BadRequestException({ message: "Аккаунт не запрашивал восстановление" });
+      throw new BadRequestException({
+        message: 'Аккаунт не запрашивал восстановление',
+      });
     }
 
     await Promise.all([
-      this.userService.changePassword(decoded_reset_token.user_id, dto.new_password),
-      this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id)
+      this.userService.changePassword(
+        decoded_reset_token.user_id,
+        dto.new_password,
+      ),
+      this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id),
     ]);
 
     return;
