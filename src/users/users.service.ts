@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, genSalt, hash } from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { CheckDuplicateResultDto } from './dto/check-duplicate-result.dto';
 import { CreateUserDto } from './dto/create-user-dto';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersEntity } from './users.entity';
 
@@ -13,7 +15,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     public usersRepository: Repository<UsersEntity>,
-  ) {}
+  ) { }
 
   public async create(dto: CreateUserDto): Promise<UsersEntity> {
     return this.usersRepository.save(dto);
@@ -29,6 +31,10 @@ export class UsersService {
 
   public async findByLogin(login: string): Promise<UsersEntity | null> {
     return this.usersRepository.findOneBy({ login });
+  }
+
+  public async findByEmail(email: string): Promise<UsersEntity | null> {
+    return this.usersRepository.findOneBy({ email });
   }
 
   public async findByEmailOrLogin(email: string, login: string) {
@@ -93,8 +99,16 @@ export class UsersService {
     return new UserResponseDto(user_profile);
   }
 
-  public async getProfile(user_id: number): Promise<UserResponseDto> {
+  public async getProfile(user_id: number): Promise<ProfileResponseDto> {
     const profile = await this.findByUserId(user_id);
-    return new UserResponseDto(profile);
+    return new ProfileResponseDto(profile);
+  }
+
+  public async changePassword(user_id: number, password: string): Promise<void> {
+    await this.update(user_id, { password });
+  }
+
+  private async update(user_id: number, update: QueryDeepPartialEntity<UsersEntity>) {
+    return this.usersRepository.update({ user_id }, update);
   }
 }

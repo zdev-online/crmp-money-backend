@@ -1,6 +1,7 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthJwtGuard } from 'src/auth/auth-jwt.guard';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 import { UserJwtPayload } from './dto/user-jwt-payload';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './user.decorator';
@@ -9,7 +10,7 @@ import { UsersService } from './users.service';
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService) { }
 
   @ApiOkResponse({
     type: UserResponseDto,
@@ -27,7 +28,7 @@ export class UsersController {
   }
 
   @ApiOkResponse({
-    type: UserResponseDto,
+    type: ProfileResponseDto,
     description: 'Ответ при запросе своих данных',
   })
   @ApiHeader({
