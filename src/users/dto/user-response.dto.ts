@@ -3,21 +3,24 @@ import { Exclude, Expose } from 'class-transformer';
 import { UsersEntity } from '../users.entity';
 
 export class UserResponseDto implements UsersEntity {
+  @ApiProperty({
+    title: "ID пользователя"
+  })
   @Expose()
   public user_id: number;
 
-  @ApiPropertyOptional({
-    type: String,
-    title: 'Почта пользователя',
-  })
-  @Expose()
+  // @ApiPropertyOptional({
+  //   type: String,
+  //   title: 'Почта пользователя',
+  // })
+  @Exclude()
   public email?: string;
 
-  @ApiProperty({
-    type: Boolean,
-    title: 'Подтверждена ли почта или нет',
-  })
-  @Expose()
+  // @ApiProperty({
+  //   type: Boolean,
+  //   title: 'Подтверждена ли почта или нет',
+  // })
+  @Exclude()
   public email_confirmed: boolean;
 
   @ApiProperty({
@@ -37,18 +40,18 @@ export class UserResponseDto implements UsersEntity {
   @Expose()
   public vk_id?: number;
 
-  @ApiProperty({
-    type: Date,
-    title: 'Дата регистрации профиля',
-  })
-  @Expose()
+  // @ApiProperty({
+  //   type: Date,
+  //   title: 'Дата регистрации профиля',
+  // })
+  @Exclude()
   public created_at: Date;
 
-  @ApiProperty({
-    type: Date,
-    title: 'Дата последнего обновления профиля',
-  })
-  @Expose()
+  // @ApiProperty({
+  //   type: Date,
+  //   title: 'Дата последнего обновления профиля',
+  // })
+  @Exclude()
   public updated_at: Date;
 
   constructor(response: UserResponseDto) {
