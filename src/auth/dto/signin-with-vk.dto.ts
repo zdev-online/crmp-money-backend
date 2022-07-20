@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SignInWithVkDto {
   @ApiProperty({ title: 'Параметр от VK после авторизации' })

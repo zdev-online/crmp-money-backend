@@ -1,5 +1,13 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, IsEmail, IsAlpha, MinLength, MaxLength, ValidateIf } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsAlpha,
+  MinLength,
+  MaxLength,
+  ValidateIf,
+} from 'class-validator';
 
 export class SignInWithEmailOrLogin {
   @ApiPropertyOptional({

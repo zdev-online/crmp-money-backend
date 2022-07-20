@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose } from 'class-transformer';
 
 export class CheckDuplicateResultDto {
   @Expose()
@@ -7,7 +7,7 @@ export class CheckDuplicateResultDto {
   @Expose()
   public duplicate_key: string;
 
-  constructor(result: CheckDuplicateResultDto){
+  constructor(result: CheckDuplicateResultDto) {
     Object.assign(this, result);
   }
 }

@@ -6,6 +6,7 @@ import {
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 const is_dev = process.env.NODE_ENV == 'development';
@@ -52,7 +53,7 @@ async function bootstrap() {
   );
 
   app.enableCors({ origin: '*' });
-  app.use(helmet());
+  app.use(helmet(), cookieParser());
 
   await app.listen(3000);
 }

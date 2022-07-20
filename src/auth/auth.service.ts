@@ -25,10 +25,12 @@ export class AuthService {
     private tokenService: TokensService,
     private userService: UsersService,
     private googleService: GoogleService,
-  ) { }
+  ) {}
 
-  public async signupWithEmail(dto: SignUpWithEmailDto): Promise<AuthResponseDto> {
-    await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
+  public async signupWithEmail(
+    dto: SignUpWithEmailDto,
+  ): Promise<AuthResponseDto> {
+    // await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
 
     const duplicate = await this.userService.checkDuplicateCredentials({
       email: dto.email,
@@ -61,7 +63,9 @@ export class AuthService {
     // await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
     const isValidVKAuthData = this.isValidVKAuthData(dto);
     if (!isValidVKAuthData) {
-      throw new BadRequestException({ message: "Неверные параметры авторизации" });
+      throw new BadRequestException({
+        message: 'Неверные параметры авторизации',
+      });
     }
 
     const dublicate = await this.userService.checkDuplicateCredentials({
@@ -93,17 +97,25 @@ export class AuthService {
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
 
-  public async signinWithEmailOrLogin(dto: SignInWithEmailOrLogin): Promise<AuthResponseDto> {
+  public async signinWithEmailOrLogin(
+    dto: SignInWithEmailOrLogin,
+  ): Promise<AuthResponseDto> {
     await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
 
-    const user = await this.userService.findByEmailOrLogin(dto.email, dto.login);
+    const user = await this.userService.findByEmailOrLogin(
+      dto.email,
+      dto.login,
+    );
     if (!user) {
-      throw new NotFoundException({ message: "Пользователь не найден" });
+      throw new NotFoundException({ message: 'Пользователь не найден' });
     }
 
-    const isValidPassword = await this.userService.isValidPassword(dto.password, user.password);
+    const isValidPassword = await this.userService.isValidPassword(
+      dto.password,
+      user.password,
+    );
     if (!isValidPassword) {
-      throw new BadRequestException({ message: "Неверный пароль!" });
+      throw new BadRequestException({ message: 'Неверный пароль!' });
     }
 
     const uuid = uuidv4();
@@ -124,12 +136,14 @@ export class AuthService {
   public async signinWithVK(dto: SignInWithVkDto): Promise<AuthResponseDto> {
     const isValidVKAuthData = this.isValidVKAuthData(dto);
     if (!isValidVKAuthData) {
-      throw new BadRequestException({ message: "Неверные параметры авторизации" });
+      throw new BadRequestException({
+        message: 'Неверные параметры авторизации',
+      });
     }
 
     const user = await this.userService.findByVkId(dto.mid);
     if (!user) {
-      throw new NotFoundException({ message: "Пользователь не найден" });
+      throw new NotFoundException({ message: 'Пользователь не найден' });
     }
 
     const uuid = uuidv4();
@@ -148,18 +162,28 @@ export class AuthService {
   }
 
   public async logout(refresh_token: string): Promise<void> {
-    const decoded_data = await this.tokenService.verifyRefreshToken(refresh_token);
+    const decoded_data = await this.tokenService.verifyRefreshToken(
+      refresh_token,
+    );
     if (!decoded_data) {
-      throw new UnauthorizedException({ message: "Авторизируйтесь для данного действия" });
+      throw new UnauthorizedException({
+        message: 'Авторизируйтесь для данного действия',
+      });
     }
     await this.tokenService.deleteTokenByUuid(decoded_data.uuid);
     return;
   }
 
-  public async refresh(current_refresh_token: string): Promise<AuthResponseDto> {
-    const decoded_data = await this.tokenService.verifyRefreshToken(current_refresh_token);
+  public async refresh(
+    current_refresh_token: string,
+  ): Promise<AuthResponseDto> {
+    const decoded_data = await this.tokenService.verifyRefreshToken(
+      current_refresh_token,
+    );
     if (!decoded_data) {
-      throw new UnauthorizedException({ message: "Авторизируйтесь для данного действия" });
+      throw new UnauthorizedException({
+        message: 'Авторизируйтесь для данного действия',
+      });
     }
 
     const [token_data, user] = await Promise.all([
@@ -167,13 +191,18 @@ export class AuthService {
       this.userService.findByUserId(decoded_data.user_id),
     ]);
     if (!user || !token_data) {
-      throw new UnauthorizedException({ message: "Авторизируйтесь для данного действия" });
+      throw new UnauthorizedException({
+        message: 'Авторизируйтесь для данного действия',
+      });
     }
 
     await this.tokenService.deleteTokenByUuid(token_data.uuid);
 
     const uuid = uuidv4();
-    const [access_token, refresh_token] = await this.generateTokens({ user_id: user.user_id, uuid }, { user_id: user.user_id });
+    const [access_token, refresh_token] = await this.generateTokens(
+      { user_id: user.user_id, uuid },
+      { user_id: user.user_id },
+    );
 
     await this.tokenService.saveRefreshToken(refresh_token, uuid);
 
@@ -190,7 +219,12 @@ export class AuthService {
     ]);
   }
 
-  public isValidVKAuthData(auth_data: Pick<SignUpWithVkDto, 'expire' | 'mid' | 'secret' | 'sid' | 'sig'>): boolean {
+  public isValidVKAuthData(
+    auth_data: Pick<
+      SignUpWithVkDto,
+      'expire' | 'mid' | 'secret' | 'sid' | 'sig'
+    >,
+  ): boolean {
     const { expire, mid, secret, sid, sig } = auth_data;
     const app_secret = this.configService.get('VK_APP_SECRET');
     return (

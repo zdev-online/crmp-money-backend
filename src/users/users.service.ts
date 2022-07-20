@@ -13,7 +13,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     public usersRepository: Repository<UsersEntity>,
-  ) { }
+  ) {}
 
   public async create(dto: CreateUserDto): Promise<UsersEntity> {
     return this.usersRepository.save(dto);

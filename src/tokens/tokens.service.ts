@@ -61,12 +61,13 @@ export class TokensService {
     refresh_token: string,
   ): Promise<RefreshTokenPayloadDto | null> {
     try {
-      const decoded_data = this.jwtService.verifyAsync<RefreshTokenPayloadDto>(
-        refresh_token,
-        {
-          secret: this.getRefreshTokensSecret(),
-        },
-      );
+      const decoded_data =
+        await this.jwtService.verifyAsync<RefreshTokenPayloadDto>(
+          refresh_token,
+          {
+            secret: this.getRefreshTokensSecret(),
+          },
+        );
       return decoded_data;
     } catch (error) {
       return null;
