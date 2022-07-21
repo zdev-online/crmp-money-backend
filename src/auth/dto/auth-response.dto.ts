@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { UserResponseDto } from 'src/users/dto/user-response.dto';
+import { ProfileResponseDto } from 'src/users/dto/profile-response.dto';
 
 export class AuthResponseDto {
   @ApiProperty({
@@ -15,9 +15,9 @@ export class AuthResponseDto {
   })
   public refresh_token: string;
 
-  @ApiProperty({ title: 'Публичные данные пользователя' })
-  @Type(() => UserResponseDto)
-  public user: UserResponseDto;
+  @ApiProperty({ title: 'Данные пользователя' })
+  @Type(() => ProfileResponseDto)
+  public user: ProfileResponseDto;
 
   constructor(response: AuthResponseDto) {
     Object.assign(this, response);

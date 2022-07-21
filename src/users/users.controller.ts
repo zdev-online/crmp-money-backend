@@ -39,7 +39,7 @@ export class UsersController {
   @Get('/profile')
   public async getProfile(
     @User() user: UserJwtPayload,
-  ): Promise<UserResponseDto> {
+  ): Promise<ProfileResponseDto> {
     return await this.userService.getProfile(user.user_id);
   }
 }

@@ -6,6 +6,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   ApiCookieAuth,
   ApiCreatedResponse,
@@ -30,7 +31,8 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenService: TokensService,
-  ) {}
+    private configService: ConfigService
+  ) { }
 
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Регистрация через E-Mail' })
@@ -141,12 +143,7 @@ export class AuthController {
     @Cookies('x-refresh-token') refresh_token: string,
     @Res({ passthrough: true }) res: e.Response,
   ): Promise<void> {
-    console.log(refresh_token);
-
-    res.clearCookie('x-refresh-token', {
-      httpOnly: true,
-      path: '/auth',
-    });
+    this.clearRefreshTokenCookie(res);
 
     return this.authService.logout(refresh_token);
   }
@@ -181,6 +178,19 @@ export class AuthController {
       httpOnly: true,
       maxAge: this.tokenService.getRefreshTokensExpireTime(),
       path: '/auth',
+      domain: process.env.NODE_ENV == 'production' ? `.${this.configService.get('FRONTEND_DOMAIN')}` : null,
+      sameSite: 'none',
+      secure: true
+    });
+  }
+
+  private clearRefreshTokenCookie(res: e.Response): void {
+    res.clearCookie('x-refresh-token', {
+      httpOnly: true,
+      path: '/auth',
+      domain: process.env.NODE_ENV == 'production' ? `.${this.configService.get('FRONTEND_DOMAIN')}` : null,
+      sameSite: 'none',
+      secure: true
     });
   }
 }
