@@ -40,6 +40,13 @@ export class ProfileResponseDto implements UsersEntity {
   @Expose()
   public vk_id?: number;
 
+  @ApiPropertyOptional({
+    type: String,
+    title: 'Имя файла аватарки',
+  })
+  @Expose()
+  public avatar?: string;
+
   @ApiProperty({
     type: Date,
     title: 'Дата регистрации профиля',

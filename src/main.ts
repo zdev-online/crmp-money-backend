@@ -52,7 +52,7 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors({ origin: '*' });
+  app.enableCors({ origin: ['http://a0697899.xsph.ru', "http://localhost"], credentials: true });
   app.use(helmet(), cookieParser());
 
   await app.listen(3000);

@@ -32,7 +32,7 @@ export class AuthService {
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
   ): Promise<AuthResponseDto> {
-    // await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
+    await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
 
     const duplicate = await this.userService.checkDuplicateCredentials({
       email: dto.email,

@@ -31,6 +31,9 @@ export class UsersEntity {
   @Column({ type: 'bigint', nullable: true, default: null, unique: true })
   public vk_id?: number;
 
+  @Column({ type: 'varchar', nullable: true, default: null })
+  public avatar?: string;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
