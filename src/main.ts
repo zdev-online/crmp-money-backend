@@ -53,7 +53,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://a0697899.xsph.ru', 'http://localhost'],
+    origin: [process.env.FRONTEND_HOST, 'http://localhost'],
     credentials: true,
   });
   app.use(helmet(), cookieParser());

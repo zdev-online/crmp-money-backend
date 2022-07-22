@@ -19,6 +19,7 @@ import { SignInWithVkDto } from './dto/signin-with-vk.dto';
 import { SignInWithEmailOrLogin } from './dto/signin-with-email-or-login.dto';
 import { ResetStartDto } from './dto/reset.dto';
 import { ResetConfirmDto } from './dto/reset-confirm-dto';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class AuthService {
@@ -27,12 +28,13 @@ export class AuthService {
     private tokenService: TokensService,
     private userService: UsersService,
     private googleService: GoogleService,
-  ) {}
+    private mailerService: MailerService
+  ) { }
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
   ): Promise<AuthResponseDto> {
-    await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
+    // await this.googleService.verifyCaptchaOrThrow(dto.recaptcha_token);
 
     const duplicate = await this.userService.checkDuplicateCredentials({
       email: dto.email,
@@ -56,11 +58,16 @@ export class AuthService {
         user_id: new_user.user_id,
       },
     );
-    await this.tokenService.saveRefreshToken(
-      refresh_token,
-      uuid,
-      new_user.user_id,
-    );
+    const [, activation_token] = await Promise.all([
+      this.tokenService.saveRefreshToken(
+        refresh_token,
+        uuid,
+        new_user.user_id,
+      ),
+      this.tokenService.generateActivationToken(new_user.user_id)
+    ]);
+
+    this.mailerService.sendActivationLink({ email: dto.email, token: activation_token });
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }

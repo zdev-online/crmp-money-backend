@@ -16,7 +16,7 @@ export class TokensService {
     private configService: ConfigService,
     @InjectRepository(TokensEntity)
     private tokenRepository: Repository<TokensEntity>,
-  ) {}
+  ) { }
 
   public async generateAccessToken(payload: {
     [key: string]: any;
@@ -122,7 +122,11 @@ export class TokensService {
     }
   }
 
-  public generateResetToken(user_id: number) {
+  public generateResetToken(user_id: number): Promise<string> {
+    return this.generateAccessToken({ user_id });
+  }
+
+  public generateActivationToken(user_id: number): Promise<string> {
     return this.generateAccessToken({ user_id });
   }
 }

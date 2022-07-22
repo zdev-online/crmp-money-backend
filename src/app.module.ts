@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GoogleModule } from './google/google.module';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { GoogleModule } from './google/google.module';
     UsersModule,
     AuthModule,
     GoogleModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

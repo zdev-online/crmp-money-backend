@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, genSalt, hash } from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
+import { TokensService } from 'src/tokens/tokens.service';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { CheckDuplicateResultDto } from './dto/check-duplicate-result.dto';
@@ -15,7 +16,8 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     public usersRepository: Repository<UsersEntity>,
-  ) {}
+    public tokenService: TokensService
+  ) { }
 
   public async create(dto: CreateUserDto): Promise<UsersEntity> {
     return this.usersRepository.save(dto);
@@ -102,6 +104,15 @@ export class UsersService {
   public async getProfile(user_id: number): Promise<ProfileResponseDto> {
     const profile = await this.findByUserId(user_id);
     return new ProfileResponseDto(profile);
+  }
+
+  public async confirmEmail(token: string): Promise<void> {
+    const decoded_activation_token = await this.tokenService.verifyAccessToken<{ user_id: number }>(token);
+    if (!decoded_activation_token) {
+      throw new BadRequestException({ message: "Неверный токен активации почты" });
+    }
+
+    await this.update(decoded_activation_token.user_id, { email_confirmed: true });
   }
 
   public async changePassword(
