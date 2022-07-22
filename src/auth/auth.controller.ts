@@ -6,7 +6,6 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   ApiCookieAuth,
   ApiCreatedResponse,
@@ -31,7 +30,6 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenService: TokensService,
-    private configService: ConfigService
   ) { }
 
   @ApiTags('Authorization')
@@ -178,9 +176,12 @@ export class AuthController {
       httpOnly: true,
       maxAge: this.tokenService.getRefreshTokensExpireTime(),
       path: '/auth',
-      domain: process.env.NODE_ENV == 'production' ? `.${this.configService.get('FRONTEND_DOMAIN')}` : null,
+      domain:
+        process.env.NODE_ENV == 'production'
+          ? `.${process.env.FRONTEND_DOMAIN}`
+          : null,
       sameSite: 'none',
-      secure: true
+      secure: true,
     });
   }
 
@@ -188,9 +189,12 @@ export class AuthController {
     res.clearCookie('x-refresh-token', {
       httpOnly: true,
       path: '/auth',
-      domain: process.env.NODE_ENV == 'production' ? `.${this.configService.get('FRONTEND_DOMAIN')}` : null,
+      domain:
+        process.env.NODE_ENV == 'production'
+          ? `.${process.env.FRONTEND_DOMAIN}`
+          : null,
       sameSite: 'none',
-      secure: true
+      secure: true,
     });
   }
 }
