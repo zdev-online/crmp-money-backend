@@ -5,38 +5,41 @@ import { SendRestoreLink } from './dto/send-restore-link.dto';
 
 @Injectable()
 export class MailerService {
-
   private logger = new Logger('MailerService');
 
-  constructor(private nestMailerService: NestMailerService) { }
+  constructor(private nestMailerService: NestMailerService) {}
 
   public async sendActivationLink(dto: SendActivationLink): Promise<void> {
     try {
       await this.nestMailerService.sendMail({
         template: 'activation-link',
         to: dto.email,
-        subject: "[CRMP - Money] Подтверждение регистрации",
+        subject: '[CRMP - Money] Подтверждение регистрации',
         context: {
-          activation_link: this.getActivationLinkFromToken(dto.token)
-        }
+          activation_link: this.getActivationLinkFromToken(dto.token),
+        },
       });
     } catch (error) {
-      return this.logger.error(`Не удалось отправить письмо активации аккаунта: ${error}`);
+      return this.logger.error(
+        `Не удалось отправить письмо активации аккаунта: ${error}`,
+      );
     }
   }
 
-  public async sendRestoreLink(dto: SendRestoreLink){
-     try {
+  public async sendRestoreLink(dto: SendRestoreLink) {
+    try {
       await this.nestMailerService.sendMail({
         template: 'restore-link',
         to: dto.email,
-        subject: "[CRMP - Money] Восстановление доступа",
+        subject: '[CRMP - Money] Восстановление доступа',
         context: {
-          restore_link: this.getRestoreConfirmLink(dto.token)
-        }
+          restore_link: this.getRestoreConfirmLink(dto.token),
+        },
       });
     } catch (error) {
-      return this.logger.error(`Не удалось отправить письмо активации аккаунта: ${error}`);
+      return this.logger.error(
+        `Не удалось отправить письмо активации аккаунта: ${error}`,
+      );
     }
   }
 
@@ -44,7 +47,7 @@ export class MailerService {
     return `${process.env.FRONTEND_HOST}/profile/email/confirm?token=${token}`;
   }
 
-  private getRestoreConfirmLink(token: string){
+  private getRestoreConfirmLink(token: string) {
     return `${process.env.FRONTEND_HOST}/auth/restore/confirm?token=${token}`;
   }
 }

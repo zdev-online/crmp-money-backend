@@ -16,7 +16,7 @@ export class TokensService {
     private configService: ConfigService,
     @InjectRepository(TokensEntity)
     private tokenRepository: Repository<TokensEntity>,
-  ) { }
+  ) {}
 
   public async generateAccessToken(payload: {
     [key: string]: any;

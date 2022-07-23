@@ -1,35 +1,44 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Exclude, Expose } from "class-transformer";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 
 export class SelfProfileResponseDto {
-  @ApiProperty({ title: "ID пользователя на сайте" })
+  @ApiProperty({ title: 'ID пользователя на сайте' })
   @Expose()
   public user_id: number;
 
-  @ApiPropertyOptional({ title: "E-Mail пользователя", description: "Может не быть, если регистрация была через VK" })
+  @ApiPropertyOptional({
+    title: 'E-Mail пользователя',
+    description: 'Может не быть, если регистрация была через VK',
+  })
   @Expose()
   public email?: string;
 
-  @ApiProperty({ title: "Статус подтверждения E-Mail" })
+  @ApiProperty({ title: 'Статус подтверждения E-Mail' })
   @Expose()
   public email_confirmed: boolean;
 
-  @ApiProperty({ title: "Логин пользователя" })
+  @ApiProperty({ title: 'Логин пользователя' })
   @Expose()
   public login: string;
 
   @Exclude()
   public password: string;
 
-  @ApiPropertyOptional({ title: "VK ID пользователя", description: "Может не быть, если регистрация через почту" })
+  @ApiPropertyOptional({
+    title: 'VK ID пользователя',
+    description: 'Может не быть, если регистрация через почту',
+  })
   @Expose()
   public vk_id?: number;
 
-  @ApiPropertyOptional({ title: "Аватар пользователя", description: "Может не быть. В этом случае подгружать стандартный" })
+  @ApiPropertyOptional({
+    title: 'Аватар пользователя',
+    description: 'Может не быть. В этом случае подгружать стандартный',
+  })
   @Expose()
   public avatar?: string;
 
-  @ApiProperty({ title: "Дата регистрации" })
+  @ApiProperty({ title: 'Дата регистрации' })
   @Expose()
   public created_at: Date;
 
@@ -39,5 +48,4 @@ export class SelfProfileResponseDto {
   constructor(profile: SelfProfileResponseDto) {
     Object.assign(this, profile);
   }
-
 }

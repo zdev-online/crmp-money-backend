@@ -29,8 +29,8 @@ export class AuthService {
     private tokenService: TokensService,
     private userService: UsersService,
     private googleService: GoogleService,
-    private mailerService: MailerService
-  ) { }
+    private mailerService: MailerService,
+  ) {}
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
@@ -60,15 +60,14 @@ export class AuthService {
       },
     );
     const [, activation_token] = await Promise.all([
-      this.tokenService.saveRefreshToken(
-        refresh_token,
-        uuid,
-        new_user.user_id,
-      ),
-      this.tokenService.generateActivationToken(new_user.user_id)
+      this.tokenService.saveRefreshToken(refresh_token, uuid, new_user.user_id),
+      this.tokenService.generateActivationToken(new_user.user_id),
     ]);
 
-    this.mailerService.sendActivationLink({ email: dto.email, token: activation_token });
+    this.mailerService.sendActivationLink({
+      email: dto.email,
+      token: activation_token,
+    });
 
     return new AuthResponseDto({ access_token, refresh_token, user: new_user });
   }
@@ -237,12 +236,17 @@ export class AuthService {
       user.user_id,
     );
 
-    this.mailerService.sendRestoreLink({ email: dto.email, token: reset_token });
+    this.mailerService.sendRestoreLink({
+      email: dto.email,
+      token: reset_token,
+    });
 
     return dto;
   }
 
-  public async restoreConfirm(dto: ResetConfirmDto): Promise<SuccessResponseDto> {
+  public async restoreConfirm(
+    dto: ResetConfirmDto,
+  ): Promise<SuccessResponseDto> {
     const decoded_reset_token = await this.tokenService.verifyAccessToken<{
       user_id: number;
     }>(dto.reset_token);
@@ -256,10 +260,7 @@ export class AuthService {
     const password = await this.userService.hashPassword(dto.new_password);
 
     await Promise.all([
-      this.userService.update(
-        decoded_reset_token.user_id,
-        { password },
-      ),
+      this.userService.update(decoded_reset_token.user_id, { password }),
       this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id),
     ]);
 

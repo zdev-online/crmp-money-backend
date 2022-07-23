@@ -1,5 +1,20 @@
-import { Body, Controller, Get, Param, Post, Query, SerializeOptions, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse, ApiHeader, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  SerializeOptions,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiOkResponse,
+  ApiHeader,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthJwtGuard } from 'src/auth/auth-jwt.guard';
 import { ConfirmEmailDto } from 'src/profile/dto/confirm-email.dto';
 import { SuccessResponseDto } from 'src/success-response.dto';
@@ -13,23 +28,22 @@ import { ProfileService } from './profile.service';
 @ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
+  constructor(private profileService: ProfileService) {}
 
-  constructor(
-    private profileService: ProfileService
-  ) { }
-
-  @ApiOperation({ description: "Получить информацию о аккаунте" })
+  @ApiOperation({ description: 'Получить информацию о аккаунте' })
   @ApiOkResponse({
     type: UserProfileDto,
     description: 'Публичная информация об аккаунте',
   })
   @SerializeOptions({ strategy: 'excludeAll' })
   @Get('/:id')
-  public async getUserProfile(@Param('id') id: number): Promise<UserProfileDto> {
+  public async getUserProfile(
+    @Param('id') id: number,
+  ): Promise<UserProfileDto> {
     return this.profileService.getUserProfile(id);
   }
 
-  @ApiOperation({ description: "Получить информацию о своем аккаунте" })
+  @ApiOperation({ description: 'Получить информацию о своем аккаунте' })
   @ApiOkResponse({
     type: SelfProfileResponseDto,
     description: 'Информация о аккаунте',
@@ -41,11 +55,13 @@ export class ProfileController {
   @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Get('/')
-  public async getSelfProfile(@User() user: UserJwtPayload): Promise<SelfProfileResponseDto> {
+  public async getSelfProfile(
+    @User() user: UserJwtPayload,
+  ): Promise<SelfProfileResponseDto> {
     return this.profileService.getSelfProfile(user.user_id);
   }
 
-  @ApiOperation({ description: "Подтверждение E-Mail" })
+  @ApiOperation({ description: 'Подтверждение E-Mail' })
   @ApiOkResponse({
     type: SuccessResponseDto,
     description: 'Ответ при успешном подтверждении почты',
@@ -57,12 +73,13 @@ export class ProfileController {
   @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Post('/confirm/email')
-  public async confirmEmail(@Query() dto: ConfirmEmailDto): Promise<SuccessResponseDto> {
+  public async confirmEmail(
+    @Query() dto: ConfirmEmailDto,
+  ): Promise<SuccessResponseDto> {
     return this.profileService.confirmEmail(dto.token);
   }
 
-
-  @ApiOperation({ description: "Смена пароля пользователя" })
+  @ApiOperation({ description: 'Смена пароля пользователя' })
   @ApiOkResponse({
     type: SuccessResponseDto,
     description: 'Ответ при успешной смене пароля',
@@ -74,7 +91,10 @@ export class ProfileController {
   @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Post('/password/change')
-  public async changePassword(@User() user: UserJwtPayload, @Body() dto: ChangePasswordDto): Promise<SuccessResponseDto> {
+  public async changePassword(
+    @User() user: UserJwtPayload,
+    @Body() dto: ChangePasswordDto,
+  ): Promise<SuccessResponseDto> {
     return this.profileService.changePassword(user.user_id, dto);
   }
 }

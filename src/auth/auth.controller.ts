@@ -31,7 +31,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenService: TokensService,
-  ) { }
+  ) {}
 
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Регистрация через E-Mail' })
@@ -170,7 +170,9 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Post('/restore/confirm')
-  public async restoreConfrim(@Body() dto: ResetConfirmDto): Promise<SuccessResponseDto> {
+  public async restoreConfrim(
+    @Body() dto: ResetConfirmDto,
+  ): Promise<SuccessResponseDto> {
     return this.authService.restoreConfirm(dto);
   }
 

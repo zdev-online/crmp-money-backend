@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, genSalt, hash } from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
@@ -14,8 +18,8 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     public usersRepository: Repository<UsersEntity>,
-    public tokenService: TokensService
-  ) { }
+    public tokenService: TokensService,
+  ) {}
 
   public async create(dto: CreateUserDto): Promise<UsersEntity> {
     return this.usersRepository.save(dto);

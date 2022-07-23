@@ -16,8 +16,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           secure: configService.get('MAILER_SECURE') == 'true',
           auth: {
             user: configService.get('MAILER_USER'),
-            pass: configService.get('MAILER_PASS')
-          }
+            pass: configService.get('MAILER_PASS'),
+          },
         },
         template: {
           dir: 'templates',
@@ -27,12 +27,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           },
         },
         defaults: {
-          from: `"crmp-money" <${configService.get("MAILER_USER")}>`,
+          from: `"crmp-money" <${configService.get('MAILER_USER')}>`,
         },
-      })
-    })
+      }),
+    }),
   ],
   providers: [MailerService],
-  exports: [MailerService]
+  exports: [MailerService],
 })
-export class MailerModule { }
+export class MailerModule {}

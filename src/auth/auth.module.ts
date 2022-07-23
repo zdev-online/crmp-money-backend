@@ -7,13 +7,8 @@ import { GoogleModule } from 'src/google/google.module';
 import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
-  imports: [
-    TokensModule,
-    UsersModule,
-    GoogleModule,
-    MailerModule
-  ],
+  imports: [TokensModule, UsersModule, GoogleModule, MailerModule],
   providers: [AuthService],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

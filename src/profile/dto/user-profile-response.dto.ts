@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose } from "class-transformer";
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
 export class UserProfileDto {
-  @ApiProperty({ title: "ID пользователя на сайте" })
+  @ApiProperty({ title: 'ID пользователя на сайте' })
   @Expose()
   public user_id: number;
 
-  @ApiProperty({ title: "Логин пользователя" })
+  @ApiProperty({ title: 'Логин пользователя' })
   @Expose()
   public login: string;
 
