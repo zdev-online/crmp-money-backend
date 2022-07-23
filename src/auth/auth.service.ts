@@ -253,10 +253,12 @@ export class AuthService {
       });
     }
 
+    const password = await this.userService.hashPassword(dto.new_password);
+
     await Promise.all([
       this.userService.update(
         decoded_reset_token.user_id,
-        { password: dto.new_password },
+        { password },
       ),
       this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id),
     ]);
