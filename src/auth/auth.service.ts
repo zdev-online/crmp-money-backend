@@ -20,6 +20,7 @@ import { SignInWithEmailOrLogin } from './dto/signin-with-email-or-login.dto';
 import { ResetStartDto } from './dto/reset.dto';
 import { ResetConfirmDto } from './dto/reset-confirm-dto';
 import { MailerService } from 'src/mailer/mailer.service';
+import { SuccessResponseDto } from 'src/success-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -178,7 +179,7 @@ export class AuthService {
     return new AuthResponseDto({ access_token, refresh_token, user });
   }
 
-  public async logout(refresh_token: string): Promise<void> {
+  public async logout(refresh_token: string): Promise<SuccessResponseDto> {
     const decoded_data = await this.tokenService.verifyRefreshToken(
       refresh_token,
     );
@@ -188,7 +189,7 @@ export class AuthService {
       });
     }
     await this.tokenService.deleteTokenByUuid(decoded_data.uuid);
-    return;
+    return new SuccessResponseDto('Успешный выход из системы');
   }
 
   public async refresh(
@@ -239,7 +240,7 @@ export class AuthService {
     return dto;
   }
 
-  public async restoreConfirm(dto: ResetConfirmDto) {
+  public async restoreConfirm(dto: ResetConfirmDto): Promise<SuccessResponseDto> {
     const decoded_reset_token = await this.tokenService.verifyAccessToken<{
       user_id: number;
     }>(dto.reset_token);
@@ -251,14 +252,14 @@ export class AuthService {
     }
 
     await Promise.all([
-      this.userService.changePassword(
+      this.userService.update(
         decoded_reset_token.user_id,
-        dto.new_password,
+        { password: dto.new_password },
       ),
       this.tokenService.deleteTokensByUserId(decoded_reset_token.user_id),
     ]);
 
-    return;
+    return new SuccessResponseDto('Пароль изменен');
   }
 
   public generateTokens(

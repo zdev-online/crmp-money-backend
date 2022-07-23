@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 import e from 'express';
 import { Cookies } from 'src/cookies.decorator';
+import { SuccessResponseDto } from 'src/success-response.dto';
 import { TokensService } from 'src/tokens/tokens.service';
 import { AuthService } from './auth.service';
 import { AuthResponseDto } from './dto/auth-response.dto';
@@ -132,6 +133,7 @@ export class AuthController {
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Завершение сессии по refresh-токену' })
   @ApiOkResponse({
+    type: SuccessResponseDto,
     description: 'Ответ при успешном завершении сессии',
   })
   @ApiCookieAuth('x-refresh-token')
@@ -140,7 +142,7 @@ export class AuthController {
   public async logout(
     @Cookies('x-refresh-token') refresh_token: string,
     @Res({ passthrough: true }) res: e.Response,
-  ): Promise<void> {
+  ): Promise<SuccessResponseDto> {
     this.clearRefreshTokenCookie(res);
 
     return this.authService.logout(refresh_token);
@@ -163,11 +165,12 @@ export class AuthController {
   @ApiTags('Authorization')
   @ApiOperation({ description: 'Завершение восстановления доступа' })
   @ApiOkResponse({
+    type: SuccessResponseDto,
     description: 'Ответ при успешной смене пароля',
   })
   @HttpCode(HttpStatus.OK)
   @Post('/restore/confirm')
-  public async restoreConfrim(@Body() dto: ResetConfirmDto): Promise<void> {
+  public async restoreConfrim(@Body() dto: ResetConfirmDto): Promise<SuccessResponseDto> {
     return this.authService.restoreConfirm(dto);
   }
 

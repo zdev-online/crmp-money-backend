@@ -7,8 +7,6 @@ import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { CheckDuplicateResultDto } from './dto/check-duplicate-result.dto';
 import { CreateUserDto } from './dto/create-user-dto';
-import { ProfileResponseDto } from './dto/profile-response.dto';
-import { UserResponseDto } from './dto/user-response.dto';
 import { UsersEntity } from './users.entity';
 
 @Injectable()
@@ -92,37 +90,7 @@ export class UsersService {
     return compare(candidate, user_password);
   }
 
-  public async getUserProfileById(user_id: number): Promise<UserResponseDto> {
-    const user_profile = await this.usersRepository.findOneBy({ user_id });
-    if (!user_profile) {
-      throw new NotFoundException({ message: `Пользователь не найден` });
-    }
-
-    return new UserResponseDto(user_profile);
-  }
-
-  public async getProfile(user_id: number): Promise<ProfileResponseDto> {
-    const profile = await this.findByUserId(user_id);
-    return new ProfileResponseDto(profile);
-  }
-
-  public async confirmEmail(token: string): Promise<void> {
-    const decoded_activation_token = await this.tokenService.verifyAccessToken<{ user_id: number }>(token);
-    if (!decoded_activation_token) {
-      throw new BadRequestException({ message: "Неверный токен активации почты" });
-    }
-
-    await this.update(decoded_activation_token.user_id, { email_confirmed: true });
-  }
-
-  public async changePassword(
-    user_id: number,
-    password: string,
-  ): Promise<void> {
-    await this.update(user_id, { password });
-  }
-
-  private async update(
+  public async update(
     user_id: number,
     update: QueryDeepPartialEntity<UsersEntity>,
   ) {

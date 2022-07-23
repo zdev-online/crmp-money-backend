@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GoogleModule } from './google/google.module';
 import { MailerModule } from './mailer/mailer.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MailerModule } from './mailer/mailer.module';
     AuthModule,
     GoogleModule,
     MailerModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
