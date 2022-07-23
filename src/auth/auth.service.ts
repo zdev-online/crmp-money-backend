@@ -237,6 +237,8 @@ export class AuthService {
       user.user_id,
     );
 
+    this.mailerService.sendRestoreLink({ email: dto.email, token: reset_token });
+
     return dto;
   }
 

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query, SerializeOptions, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiOkResponse, ApiHeader, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthJwtGuard } from 'src/auth/auth-jwt.guard';
 import { ConfirmEmailDto } from 'src/profile/dto/confirm-email.dto';
 import { SuccessResponseDto } from 'src/success-response.dto';
@@ -11,10 +11,6 @@ import { UserProfileDto } from './dto/user-profile-response.dto';
 import { ProfileService } from './profile.service';
 
 @ApiTags('Profile')
-@ApiHeader({
-  description: 'Токен доступа',
-  name: 'x-access-token',
-})
 @Controller('profile')
 export class ProfileController {
 
@@ -28,7 +24,6 @@ export class ProfileController {
     description: 'Публичная информация об аккаунте',
   })
   @SerializeOptions({ strategy: 'excludeAll' })
-  @UseGuards(AuthJwtGuard)
   @Get('/:id')
   public async getUserProfile(@Param('id') id: number): Promise<UserProfileDto> {
     return this.profileService.getUserProfile(id);
@@ -39,6 +34,11 @@ export class ProfileController {
     type: SelfProfileResponseDto,
     description: 'Информация о аккаунте',
   })
+  @ApiHeader({
+    description: 'Токен доступа',
+    name: 'x-access-token',
+  })
+  @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Get('/')
   public async getSelfProfile(@User() user: UserJwtPayload): Promise<SelfProfileResponseDto> {
@@ -50,6 +50,11 @@ export class ProfileController {
     type: SuccessResponseDto,
     description: 'Ответ при успешном подтверждении почты',
   })
+  @ApiHeader({
+    description: 'Токен доступа',
+    name: 'x-access-token',
+  })
+  @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Post('/confirm/email')
   public async confirmEmail(@Query() dto: ConfirmEmailDto): Promise<SuccessResponseDto> {
@@ -62,6 +67,11 @@ export class ProfileController {
     type: SuccessResponseDto,
     description: 'Ответ при успешной смене пароля',
   })
+  @ApiHeader({
+    description: 'Токен доступа',
+    name: 'x-access-token',
+  })
+  @ApiBearerAuth('x-access-token')
   @UseGuards(AuthJwtGuard)
   @Post('/password/change')
   public async changePassword(@User() user: UserJwtPayload, @Body() dto: ChangePasswordDto): Promise<SuccessResponseDto> {
