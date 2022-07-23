@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { SelfProfileResponseDto } from 'src/profile/dto/self-profile-response.dto';
 
 export class AuthResponseDto {

@@ -14,7 +14,7 @@ export class SignInWithEmailOrLogin {
     type: String,
     title: 'Почта пользователя',
   })
-  @ValidateIf((object, value) => !object.login)
+  @ValidateIf((object) => !object.login)
   @IsNotEmpty()
   @IsString()
   @IsEmail()
@@ -25,7 +25,7 @@ export class SignInWithEmailOrLogin {
     minLength: 4,
     maxLength: 15,
   })
-  @ValidateIf((object, value) => !object.email)
+  @ValidateIf((object) => !object.email)
   @IsNotEmpty()
   @IsString()
   @IsAlpha()
