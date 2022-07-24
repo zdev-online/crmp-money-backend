@@ -14,6 +14,7 @@ import {
   ApiHeader,
   ApiTags,
   ApiBearerAuth,
+  PickType,
 } from '@nestjs/swagger';
 import { AuthJwtGuard } from 'src/auth/auth-jwt.guard';
 import { ConfirmEmailDto } from 'src/profile/dto/confirm-email.dto';
@@ -28,9 +29,11 @@ import { ProfileService } from './profile.service';
 @ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService) { }
 
-  @ApiOperation({ description: 'Получить информацию о аккаунте' })
+  @ApiOperation({
+    description: 'Получить информацию о аккаунте'
+  })
   @ApiOkResponse({
     type: UserProfileDto,
     description: 'Публичная информация об аккаунте',

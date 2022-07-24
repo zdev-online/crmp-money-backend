@@ -15,7 +15,7 @@ export class AuthResponseDto {
   })
   public refresh_token: string;
 
-  @ApiProperty({ title: 'Данные пользователя' })
+  @ApiProperty({ title: 'Данные пользователя', type: SelfProfileResponseDto })
   @Type(() => SelfProfileResponseDto)
   public user: SelfProfileResponseDto;
 

@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { UserRoles } from 'src/users/user.roles';
 
 export class SelfProfileResponseDto {
   @ApiProperty({ title: 'ID пользователя на сайте' })
@@ -37,6 +38,14 @@ export class SelfProfileResponseDto {
   })
   @Expose()
   public avatar?: string;
+
+  @ApiProperty({
+    enum: UserRoles,
+    title: "Роль пользователя",
+    description: "Тут пишет, что это `string`, хотя на самом деле это ЧИСЛО!!!"
+  })
+  @Expose()
+  public role: UserRoles;
 
   @ApiProperty({ title: 'Дата регистрации' })
   @Expose()
