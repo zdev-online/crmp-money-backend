@@ -30,7 +30,7 @@ export class AuthService {
     private userService: UsersService,
     private googleService: GoogleService,
     private mailerService: MailerService,
-  ) {}
+  ) { }
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
@@ -57,6 +57,7 @@ export class AuthService {
       },
       {
         user_id: new_user.user_id,
+        role: new_user.role
       },
     );
     const [, activation_token] = await Promise.all([
@@ -103,6 +104,7 @@ export class AuthService {
       },
       {
         user_id: new_user.user_id,
+        role: new_user.role
       },
     );
     await this.tokenService.saveRefreshToken(
@@ -143,6 +145,7 @@ export class AuthService {
       },
       {
         user_id: user.user_id,
+        role: user.role
       },
     );
     await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
@@ -171,6 +174,7 @@ export class AuthService {
       },
       {
         user_id: user.user_id,
+        role: user.role
       },
     );
     await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
@@ -218,7 +222,10 @@ export class AuthService {
     const uuid = uuidv4();
     const [access_token, refresh_token] = await this.generateTokens(
       { user_id: user.user_id, uuid },
-      { user_id: user.user_id },
+      {
+        user_id: user.user_id,
+        role: user.role
+      },
     );
 
     await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
@@ -267,7 +274,7 @@ export class AuthService {
     return new SuccessResponseDto('Пароль изменен');
   }
 
-  public generateTokens(
+  private generateTokens(
     refresh_token_payload: RefreshTokenPayloadDto,
     access_token_payload: UserJwtPayload,
   ): Promise<[string, string]> {
@@ -277,7 +284,7 @@ export class AuthService {
     ]);
   }
 
-  public isValidVKAuthData(
+  private isValidVKAuthData(
     auth_data: Pick<
       SignUpWithVkDto,
       'expire' | 'mid' | 'secret' | 'sid' | 'sig'

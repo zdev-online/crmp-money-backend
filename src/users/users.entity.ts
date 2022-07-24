@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRoles } from './user.roles';
 
 @Entity({ name: 'users' })
 export class UsersEntity {
@@ -33,6 +34,13 @@ export class UsersEntity {
 
   @Column({ type: 'varchar', nullable: true, default: null })
   public avatar?: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRoles,
+    default: UserRoles.USER
+  })
+  public role: UserRoles;
 
   @CreateDateColumn({
     type: 'timestamp',

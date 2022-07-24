@@ -14,7 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import e from 'express';
-import { Cookies } from 'src/cookies.decorator';
+import { Cookies } from 'src/decorators/cookies.decorator';
 import { SuccessResponseDto } from 'src/success-response.dto';
 import { TokensService } from 'src/tokens/tokens.service';
 import { AuthService } from './auth.service';
