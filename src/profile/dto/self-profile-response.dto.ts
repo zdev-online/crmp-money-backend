@@ -41,8 +41,8 @@ export class SelfProfileResponseDto {
 
   @ApiProperty({
     enum: UserRoles,
-    title: "Роль пользователя",
-    description: "Тут пишет, что это `string`, хотя на самом деле это ЧИСЛО!!!"
+    title: 'Роль пользователя',
+    description: 'Тут пишет, что это `string`, хотя на самом деле это ЧИСЛО!!!',
   })
   @Expose()
   public role: UserRoles;

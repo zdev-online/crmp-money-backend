@@ -1,8 +1,5 @@
-import { UserRoles } from "../user.roles";
+import { UserRoles } from '../user.roles';
 
 export class UserJwtPayload {
-  constructor(
-    public user_id: number,
-    public role: UserRoles
-  ) { }
+  constructor(public user_id: number, public role: UserRoles) {}
 }

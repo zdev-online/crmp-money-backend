@@ -11,9 +11,9 @@ export const RolesGuard = (...roles: UserRoles[]): Type<CanActivate> => {
       const request = context.switchToHttp().getRequest();
       const user = request.user as UserJwtPayload;
 
-      return roles.some(role => role == user.role);
+      return roles.some((role) => role == user.role);
     }
   }
 
   return mixin(RolesGuardMixin);
-}
+};

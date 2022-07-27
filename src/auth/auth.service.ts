@@ -30,7 +30,7 @@ export class AuthService {
     private userService: UsersService,
     private googleService: GoogleService,
     private mailerService: MailerService,
-  ) { }
+  ) {}
 
   public async signupWithEmail(
     dto: SignUpWithEmailDto,
@@ -57,7 +57,7 @@ export class AuthService {
       },
       {
         user_id: new_user.user_id,
-        role: new_user.role
+        role: new_user.role,
       },
     );
     const [, activation_token] = await Promise.all([
@@ -104,7 +104,7 @@ export class AuthService {
       },
       {
         user_id: new_user.user_id,
-        role: new_user.role
+        role: new_user.role,
       },
     );
     await this.tokenService.saveRefreshToken(
@@ -145,7 +145,7 @@ export class AuthService {
       },
       {
         user_id: user.user_id,
-        role: user.role
+        role: user.role,
       },
     );
     await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
@@ -174,7 +174,7 @@ export class AuthService {
       },
       {
         user_id: user.user_id,
-        role: user.role
+        role: user.role,
       },
     );
     await this.tokenService.saveRefreshToken(refresh_token, uuid, user.user_id);
@@ -224,7 +224,7 @@ export class AuthService {
       { user_id: user.user_id, uuid },
       {
         user_id: user.user_id,
-        role: user.role
+        role: user.role,
       },
     );
 

@@ -10,12 +10,38 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { GoogleModule } from './google/google.module';
 import { MailerModule } from './mailer/mailer.module';
 import { ProfileModule } from './profile/profile.module';
+import { ProductsModule } from './products/products.module';
+import { ProjectsModule } from './projects/projects.module';
+import { ServersModule } from './servers/servers.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string().valid('production', 'development'),
+        PORT: Joi.number(),
+        DB_HOST: Joi.string(),
+        DB_PORT: Joi.number(),
+        DB_USERNAME: Joi.string(),
+        DB_PASSWORD: Joi.string(),
+        DB_DATABASE: Joi.string(),
+        JWT_ACCESS_SECRET: Joi.string(),
+        JWT_ACCESS_TTL_MS: Joi.number(),
+        JWT_REFRESH_SECRET: Joi.string(),
+        JWT_REFRESH_TTL_MS: Joi.number(),
+        VK_APP_SECRET: Joi.string(),
+        GOOGLE_RECAPTCHA_SECRET: Joi.string(),
+        FRONTEND_HOST: Joi.string(),
+        FRONTEND_DOMAIN: Joi.string(),
+        MAILER_USER: Joi.string(),
+        MAILER_PASS: Joi.string(),
+        MAILER_HOST: Joi.string(),
+        MAILER_PORT: Joi.number(),
+        MAILER_SECURE: Joi.boolean(),
+      })
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -40,8 +66,11 @@ import { ProfileModule } from './profile/profile.module';
     GoogleModule,
     MailerModule,
     ProfileModule,
+    ProductsModule,
+    ProjectsModule,
+    ServersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

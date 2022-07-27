@@ -29,10 +29,10 @@ import { ProfileService } from './profile.service';
 @ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService) {}
 
   @ApiOperation({
-    description: 'Получить информацию о аккаунте'
+    description: 'Получить информацию о аккаунте',
   })
   @ApiOkResponse({
     type: UserProfileDto,

@@ -13,7 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         transport: {
           host: configService.get('MAILER_HOST'),
           port: Number(configService.get('MAILER_PORT')),
-          secure: configService.get('MAILER_SECURE') == 'true',
+          secure: configService.get('MAILER_SECURE'),
           auth: {
             user: configService.get('MAILER_USER'),
             pass: configService.get('MAILER_PASS'),

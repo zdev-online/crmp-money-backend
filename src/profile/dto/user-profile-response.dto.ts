@@ -20,13 +20,13 @@ export class UserProfileDto {
 
   @ApiProperty({
     enum: UserRoles,
-    title: "Роль пользователя",
+    title: 'Роль пользователя',
     description: `Тут пишет, что это "string", хотя на самом деле это "number"!
       USER = 0,
       MODERATOR = 800,
       ADMINISTRATOR = 900,
       OWNER = 1000
-    `
+    `,
   })
   @Expose()
   public role: UserRoles;

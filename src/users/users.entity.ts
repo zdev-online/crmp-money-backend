@@ -38,7 +38,7 @@ export class UsersEntity {
   @Column({
     type: 'enum',
     enum: UserRoles,
-    default: UserRoles.USER
+    default: UserRoles.USER,
   })
   public role: UserRoles;
 
