@@ -53,7 +53,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: [process.env.FRONTEND_HOST, 'http://localhost'],
+    origin: process.env.FRONTEND_HOST,
     credentials: true,
   });
   app.use(helmet(), cookieParser());

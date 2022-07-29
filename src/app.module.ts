@@ -13,6 +13,7 @@ import { ProfileModule } from './profile/profile.module';
 import { ProductsModule } from './products/products.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ServersModule } from './servers/servers.module';
+import { UploadsModule } from './uploads/uploads.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -36,6 +37,8 @@ import * as Joi from 'joi';
         GOOGLE_RECAPTCHA_SECRET: Joi.string(),
         FRONTEND_HOST: Joi.string(),
         FRONTEND_DOMAIN: Joi.string(),
+        FRONTEND_EMAIL_CONFIRM_PATH: Joi.string(),
+        FRONTEND_RESTORE_PATH: Joi.string(),
         MAILER_USER: Joi.string(),
         MAILER_PASS: Joi.string(),
         MAILER_HOST: Joi.string(),
@@ -69,6 +72,7 @@ import * as Joi from 'joi';
     ProductsModule,
     ProjectsModule,
     ServersModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
