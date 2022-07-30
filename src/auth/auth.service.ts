@@ -83,7 +83,7 @@ export class AuthService {
     }
 
     const dublicate = await this.userService.checkDuplicateCredentials({
-      vk_id: dto.mid,
+      vk_id: Number(dto.mid),
       login: dto.login,
     });
 
@@ -92,9 +92,9 @@ export class AuthService {
     }
 
     const password = await this.userService.hashPassword(
-      `${(Date.now() / 1000) * Math.random()}_DEFAULT_PASS`,
+      `${Math.floor(Date.now() / 1000) * Math.random()}_DEFAULT_PASS`,
     );
-    const new_user = await this.userService.create({ ...dto, password });
+    const new_user = await this.userService.create({ vk_id: Number(dto.mid), password, login: dto.login });
 
     const uuid = uuidv4();
     const [access_token, refresh_token] = await this.generateTokens(
@@ -161,7 +161,7 @@ export class AuthService {
       });
     }
 
-    const user = await this.userService.findByVkId(dto.mid);
+    const user = await this.userService.findByVkId(Number(dto.mid));
     if (!user) {
       throw new NotFoundException({ message: 'Пользователь не найден' });
     }
@@ -293,7 +293,7 @@ export class AuthService {
     const { expire, mid, secret, sid, sig } = auth_data;
     const app_secret = this.configService.get('VK_APP_SECRET');
     return (
-      md5(`expire${expire}mid=${mid}secret=${secret}sid=${sid}${app_secret}`) ==
+      md5(`expire=${expire}mid=${mid}secret=${secret}sid=${sid}${app_secret}`) ==
       sig
     );
   }

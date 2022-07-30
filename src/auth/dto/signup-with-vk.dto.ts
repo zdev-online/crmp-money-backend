@@ -5,22 +5,33 @@ import {
   MinLength,
   MaxLength,
   IsAlpha,
+  IsNumber,
 } from 'class-validator';
 
 export class SignUpWithVkDto {
   @ApiProperty({ title: 'Параметр от VK после авторизации' })
+  @IsNotEmpty()
+  @IsNumber()
   public expire: number;
 
   @ApiProperty({ title: 'Параметр от VK после авторизации' })
-  public mid: number;
+  @IsNotEmpty()
+  @IsString()
+  public mid: string;
 
   @ApiProperty({ title: 'Параметр от VK после авторизации' })
+  @IsNotEmpty()
+  @IsString()
   public secret: string;
 
   @ApiProperty({ title: 'Параметр от VK после авторизации' })
+  @IsNotEmpty()
+  @IsString()
   public sid: string;
 
   @ApiProperty({ title: 'Параметр от VK после авторизации' })
+  @IsNotEmpty()
+  @IsString()
   public sig: string;
 
   @ApiProperty({

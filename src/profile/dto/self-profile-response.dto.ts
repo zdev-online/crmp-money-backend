@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { UserRoles } from 'src/users/user.roles';
 
 export class SelfProfileResponseDto {
@@ -28,6 +28,10 @@ export class SelfProfileResponseDto {
   @ApiPropertyOptional({
     title: 'VK ID пользователя',
     description: 'Может не быть, если регистрация через почту',
+  })
+  @Transform(({ value }) => {
+    const number = Number(value);
+    return Number.isNaN(number) ? null : number; 
   })
   @Expose()
   public vk_id?: number;
