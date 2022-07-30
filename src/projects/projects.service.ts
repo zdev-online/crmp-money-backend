@@ -12,17 +12,17 @@ export class ProjectsService {
   ) { }
 
   public async findAll(): Promise<ProjectsEntity[]> {
-    const projects = await this.projectsRepository.find();
+    const projects = await this.projectsRepository.find({ relations: { servers: true } });
     return projects || [];
   }
 
   public async findById(project_id: number): Promise<ProjectsEntity | null> {
-    const project = await this.projectsRepository.findOneBy({ project_id });
+    const project = await this.projectsRepository.findOne({ where: { project_id }, relations: { servers: true } });
     return project || null;
   }
 
   public async findByName(name: string): Promise<ProjectsEntity> {
-    return this.projectsRepository.findOneBy({ name });
+    return this.projectsRepository.findOne({ where: { name }, relations: { servers: true } });
   }
 
   public async create(dto: AddProjectDto): Promise<ProjectsEntity> {

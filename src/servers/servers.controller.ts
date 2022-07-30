@@ -10,6 +10,13 @@ export class ServersController {
     private serversService: ServersService
   ) { }
 
+  @ApiOperation({ description: "Получить все сервера" })
+  @ApiOkResponse({ type: [ServersEntity] })
+  @Get("/")
+  public async findAll(): Promise<ServersEntity[]> {
+    return this.serversService.findAll();
+  }
+
   @ApiOperation({ description: "Получить сервер по ID" })
   @ApiOkResponse({ type: ServersEntity })
   @Get("/:server_id")

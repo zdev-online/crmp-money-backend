@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 const is_dev = process.env.NODE_ENV == 'development';
 
@@ -52,8 +53,10 @@ async function bootstrap() {
     }),
   );
 
+  const configService = app.get(ConfigService);
+
   app.enableCors({
-    origin: process.env.FRONTEND_HOST,
+    origin: configService.getOrThrow('FRONTEND_HOST'),
     credentials: true,
   });
   app.use(helmet(), cookieParser());

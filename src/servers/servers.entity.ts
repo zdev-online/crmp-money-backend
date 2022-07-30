@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -18,7 +18,8 @@ export class ServersEntity {
   @Column({ type: 'varchar', unique: true })
   public name: string;
 
+  @ApiProperty({ type: () => OmitType(ProjectsEntity, ['servers'] as const), title: "Проект сервера" })
   @ManyToOne(() => ProjectsEntity, (project: ProjectsEntity) => project.servers)
   @JoinColumn({ name: 'project_id' })
-  public project: ProjectsEntity[];
+  public project: ProjectsEntity;
 }

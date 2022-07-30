@@ -13,7 +13,6 @@ import { ProfileModule } from './profile/profile.module';
 import { ProductsModule } from './products/products.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ServersModule } from './servers/servers.module';
-import { UploadsModule } from './uploads/uploads.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -72,7 +71,6 @@ import * as Joi from 'joi';
     ProductsModule,
     ProjectsModule,
     ServersModule,
-    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

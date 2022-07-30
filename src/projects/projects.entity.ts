@@ -8,14 +8,11 @@ export class ProjectsEntity {
   @PrimaryGeneratedColumn('increment')
   public project_id: number;
 
-  @ApiProperty({ type: String, title: 'Назвние Проекта' })
+  @ApiProperty({ type: String, title: 'Название Проекта' })
   @Column({ type: 'varchar', unique: true })
   public name: string;
 
   @ApiProperty({ type: [ServersEntity], title: 'Сервера проекта' })
-  @OneToMany(() => ServersEntity, (server: ServersEntity) => server.project, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany(() => ServersEntity, (server: ServersEntity) => server.project, { cascade: true })
   public servers: ServersEntity[];
 }
