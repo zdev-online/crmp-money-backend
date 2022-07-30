@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { SelfProfileResponseDto } from 'src/profile/dto/self-profile-response.dto';
+import { FullProfileResponseDto } from 'src/profile/dto/full-profile-response.dto';
 
 export class AuthResponseDto {
   @ApiProperty({
@@ -15,9 +15,9 @@ export class AuthResponseDto {
   })
   public refresh_token: string;
 
-  @ApiProperty({ title: 'Данные пользователя', type: SelfProfileResponseDto })
-  @Type(() => SelfProfileResponseDto)
-  public user: SelfProfileResponseDto;
+  @ApiProperty({ title: 'Данные пользователя', type: FullProfileResponseDto })
+  @Type(() => FullProfileResponseDto)
+  public user: FullProfileResponseDto;
 
   constructor(response: AuthResponseDto) {
     Object.assign(this, response);

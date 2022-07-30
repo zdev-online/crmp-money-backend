@@ -7,7 +7,7 @@ import { SuccessResponseDto } from 'src/success-response.dto';
 import { TokensService } from 'src/tokens/tokens.service';
 import { UsersService } from 'src/users/users.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { SelfProfileResponseDto } from './dto/self-profile-response.dto';
+import { FullProfileResponseDto } from './dto/full-profile-response.dto';
 import { UserProfileDto } from './dto/user-profile-response.dto';
 
 @Injectable()
@@ -28,10 +28,10 @@ export class ProfileService {
 
   public async getSelfProfile(
     user_id: number,
-  ): Promise<SelfProfileResponseDto> {
+  ): Promise<FullProfileResponseDto> {
     const profile = await this.userService.findByUserId(user_id);
 
-    return new SelfProfileResponseDto(profile);
+    return new FullProfileResponseDto(profile);
   }
 
   public async confirmEmail(token: string): Promise<SuccessResponseDto> {

@@ -22,7 +22,7 @@ import { SuccessResponseDto } from 'src/success-response.dto';
 import { UserJwtPayload } from 'src/users/dto/user-jwt-payload';
 import { User } from 'src/users/user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { SelfProfileResponseDto } from './dto/self-profile-response.dto';
+import { FullProfileResponseDto } from './dto/full-profile-response.dto';
 import { UserProfileDto } from './dto/user-profile-response.dto';
 import { ProfileService } from './profile.service';
 
@@ -48,7 +48,7 @@ export class ProfileController {
 
   @ApiOperation({ description: 'Получить информацию о своем аккаунте' })
   @ApiOkResponse({
-    type: SelfProfileResponseDto,
+    type: FullProfileResponseDto,
     description: 'Информация о аккаунте',
   })
   @ApiHeader({
@@ -60,7 +60,7 @@ export class ProfileController {
   @Get('/')
   public async getSelfProfile(
     @User() user: UserJwtPayload,
-  ): Promise<SelfProfileResponseDto> {
+  ): Promise<FullProfileResponseDto> {
     return this.profileService.getSelfProfile(user.user_id);
   }
 

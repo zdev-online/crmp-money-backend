@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { UserRoles } from 'src/users/user.roles';
 
-export class SelfProfileResponseDto {
+export class FullProfileResponseDto {
   @ApiProperty({ title: 'ID пользователя на сайте' })
   @Expose()
   public user_id: number;
@@ -31,7 +31,7 @@ export class SelfProfileResponseDto {
   })
   @Transform(({ value }) => {
     const number = Number(value);
-    return Number.isNaN(number) ? null : number; 
+    return Number.isNaN(number) ? null : number;
   })
   @Expose()
   public vk_id?: number;
@@ -46,7 +46,13 @@ export class SelfProfileResponseDto {
   @ApiProperty({
     enum: UserRoles,
     title: 'Роль пользователя',
-    description: 'Тут пишет, что это `string`, хотя на самом деле это ЧИСЛО!!!',
+    description: `
+      Тут пишет, что это \`string\`, хотя на самом деле это ЧИСЛО!!!
+        USER = 0,
+        MODERATOR = 800,
+        ADMINISTRATOR = 900,
+        OWNER = 1000,
+      `,
   })
   @Expose()
   public role: UserRoles;
@@ -58,7 +64,7 @@ export class SelfProfileResponseDto {
   @Exclude()
   public updated_at: Date;
 
-  constructor(profile: SelfProfileResponseDto) {
+  constructor(profile: FullProfileResponseDto) {
     Object.assign(this, profile);
   }
 }
